@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/layout/activity_main.xml" value="0.2359375" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/drawable/btn_before_pressed.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/drawable/btn_final.xml" value="0.183" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/drawable/btn_pressed.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/drawable/custom_btn.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/layout-land/activity_launcher.xml" value="0.21164021164021163" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/layout/activity_launcher.xml" value="0.152" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/mobileCwOne/app/src/main/res/layout/first_activity.xml" value="0.22554347826086957" />
       </map>
     </option>
   </component>

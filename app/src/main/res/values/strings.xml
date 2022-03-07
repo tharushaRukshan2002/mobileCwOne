@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">mobileCwOne</string>
+    <string name="Header">Math is fun</string>
+    <string name="todo">TODO</string>
+    <string name="correct">Correct</string>
+    <string name="new_game">New game</string>
+    <string name="about">About</string>
+
 </resources>
