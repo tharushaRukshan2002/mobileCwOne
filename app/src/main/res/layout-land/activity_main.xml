@@ -79,7 +79,7 @@
             android:id="@+id/answerValidityTxt"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:fontFamily="casual"
             android:textAlignment="center"
             android:textSize="35sp"
@@ -91,7 +91,7 @@
             android:id="@+id/answerValidityImg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:contentDescription="@string/right_or_wrong"
             tools:srcCompat="@tools:sample/avatars" />
 
@@ -113,7 +113,7 @@
                     android:id="@+id/answerValidityTxt1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:fontFamily="casual"
                     android:textColor="@color/red"
                     android:textAlignment="center"
@@ -126,7 +126,7 @@
                     android:id="@+id/answerValidityImg1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     tools:srcCompat="@tools:sample/avatars"
                     android:contentDescription="@string/right_or_wrong" />
 

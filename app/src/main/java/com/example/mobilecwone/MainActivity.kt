@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,19 +26,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lessBtn: Button // 1 < 2
 
     private lateinit var validityImage: ImageView // image text
-    private lateinit var wrongImage: ImageView
+    private lateinit var wrongImage: ImageView //cross mark
 
-    private var correctAnswers = 0
-    private var wrongAnswers = 0
+    private var correctAnswers = 0 //num of correct answers
+    private var wrongAnswers = 0 //num of wrong answers
 
 
     private var screenInitializeBool = true
+    private var timerRun = true
     private var sumOfOne = 0 // text view one sum
     private var sumOfTwo = 0 // text view two sum
     private var operators = mutableListOf("+", "-", "*", "/")
 
     private var buttons = mutableListOf<Button>()
-    private var targetTimeToRun: Int = 15000 // starting time of the timer
+    private var targetTimeToRun: Int = 30000 // starting time of the timer
     private val correctList = mutableListOf<Int>()
 
     @SuppressLint("SetTextI18n")
@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         textFieldOne = findViewById(R.id.equationOneTxt)
         textFieldTwo = findViewById(R.id.equationTwoTxt)
@@ -84,6 +86,31 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("sumOfOne", sumOfOne)
+        outState.putInt("sumOfTwo", sumOfTwo)
+        outState.putInt("timerTime", targetTimeToRun)
+        outState.putInt("correct", correctAnswers)
+        outState.putInt("wrong", wrongAnswers)
+        outState.putString("textViewOne", textFieldOne.text.toString())
+        outState.putString("textVieTwo", textFieldTwo.text.toString())
+        outState.putBoolean("screenInitializeBool", screenInitializeBool)
+
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        sumOfOne = savedInstanceState.getInt("sumOfOne")
+        sumOfTwo = savedInstanceState.getInt("sumOfTwo")
+        wrongAnswers = savedInstanceState.getInt("wrong")
+        correctAnswers = savedInstanceState.getInt("correct")
+        targetTimeToRun = savedInstanceState.getInt("timerTime")
+        textFieldOne.text = savedInstanceState.getString("textViewOne")
+        textFieldTwo.text = savedInstanceState.getString("textVieTwo")
+        screenInitializeBool = savedInstanceState.getBoolean("screenInitializeBool")
+    }
+
     /**
      * timer using recursion
      * https://stackoverflow.com/questions/37150291/recursive-countdown-timer
@@ -91,6 +118,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun timer() {
+
         targetTimeToRun -= 1000
         val seconds = (targetTimeToRun / 1000)//calculating seconds remaining
 
@@ -111,20 +139,28 @@ class MainActivity : AppCompatActivity() {
 
             }, 1000)
         }
-        //this will call the final activity
-        if (targetTimeToRun == 0) {
-            screenInitializeBool = false
-            //correct Answer
-            validityTxt.text = "Correct: $correctAnswers"
-            validityTxt.setTextColor(Color.parseColor("#47FF00"))
-            validityTxt.textSize = 33f
-            validityImage.setImageResource(R.drawable.done)
-
-            wrongTxt.text = "Wrong: $wrongAnswers"
-            wrongImage.setImageResource(R.drawable.cross_mark_48)
-            timerTxt.text = "TIME OVER"
-            buttonDisableFun()
+        //this will end the game
+        if (targetTimeToRun <= 0) {
+            timeEnd()
         }
+
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun timeEnd() {
+        screenInitializeBool = false
+        //correct Answer
+        validityTxt.text = "Correct: $correctAnswers"
+        validityTxt.setTextColor(Color.GREEN)
+        validityTxt.textSize = 33f
+        validityImage.setImageResource(R.drawable.done)
+        wrongTxt.text = "Wrong: $wrongAnswers"
+        wrongImage.setImageResource(R.drawable.cross_mark_48)
+        timerTxt.text = "TIME OVER"
+        textFieldOne.text = null
+        textFieldTwo.text = null
+        buttonDisableFun()
     }
 
     /**
@@ -133,10 +169,10 @@ class MainActivity : AppCompatActivity() {
     private fun screenControl() {
 
         if (targetTimeToRun < 10000) {
-            timerTxt.setTextColor(Color.parseColor("#DF0000"))
+            timerTxt.setTextColor(Color.RED)
             timerTxt.textSize = 35f
         } else {
-            timerTxt.setTextColor(Color.parseColor("#FF000000"))
+            timerTxt.setTextColor(Color.WHITE)
             timerTxt.textSize = 32f
         }
     }
@@ -148,7 +184,7 @@ class MainActivity : AppCompatActivity() {
      */
     @SuppressLint("SetTextI18n")
     private fun screenInitialize() {
-        if (screenInitializeBool ) {
+        if (screenInitializeBool) {
             validityTxt.text = null
             validityImage.setImageResource(0)
             Log.i("my", "correct = $correctAnswers")
@@ -158,9 +194,6 @@ class MainActivity : AppCompatActivity() {
             buttonEnableFun()
 //            Log.d(TAG, "sum1 = $sumOfOne")
 //            Log.d(TAG, "sum2 = $sumOfTwo")
-        }else{
-            textFieldOne.text = null
-            textFieldTwo.text = null
         }
     }
 
@@ -190,15 +223,13 @@ class MainActivity : AppCompatActivity() {
                 if (operator == "/") {
                     /* if the operator is division "/" it will check the 'sum / random ' has no remainder
                    and random num cannot be bigger than the sum . */
-                     if (sum != 1) {
-                         while(sum % randomNumber != 0 ) {
-                             randomNumber = (2..21).random()//number wont be 1
-                         }
-                     } else{
+                    if (sum != 1) {
+                        while (sum % randomNumber != 0) {
+                            randomNumber = (2..21).random()//number wont be 1
+                        }
+                    } else {
                         randomNumber = 1
-                     }
-
-
+                    }
                 }
                 tempSum = calculation(sum, randomNumber, operator) //calculating the sum
                 if (tempSum >= 100) {
@@ -209,7 +240,6 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     sum = tempSum
                 }
-
             }
             when {
                 mainLoop == 1 -> {
@@ -281,7 +311,7 @@ class MainActivity : AppCompatActivity() {
 
         if (sumOfOne > sumOfTwo) {
             validityTxt.text = "Correct" //setting text
-            validityTxt.setTextColor(Color.parseColor("#47FF00")) //colour GREEN
+            validityTxt.setTextColor(Color.GREEN) //colour GREEN
             validityImage.setImageResource(R.drawable.done)
             correctAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -293,7 +323,7 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             validityTxt.text = "Wrong"
-            validityTxt.setTextColor(Color.parseColor("#DF0000"))
+            validityTxt.setTextColor(Color.RED)
             validityImage.setImageResource(R.drawable.cross_mark_48)
             wrongAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -317,7 +347,7 @@ class MainActivity : AppCompatActivity() {
 
         if (sumOfOne == sumOfTwo) {
             validityTxt.text = "Correct" //setting text
-            validityTxt.setTextColor(Color.parseColor("#47FF00")) //colour GREEN
+            validityTxt.setTextColor(Color.GREEN) //colour GREEN
             validityImage.setImageResource(R.drawable.done)
             correctAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -329,7 +359,7 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             validityTxt.text = "Wrong"
-            validityTxt.setTextColor(Color.parseColor("#DF0000"))
+            validityTxt.setTextColor(Color.RED)
             validityImage.setImageResource(R.drawable.cross_mark_48)
             wrongAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -353,7 +383,7 @@ class MainActivity : AppCompatActivity() {
 
         if (sumOfOne < sumOfTwo) {
             validityTxt.text = "Correct" //setting text
-            validityTxt.setTextColor(Color.parseColor("#47FF00")) //colour GREEN
+            validityTxt.setTextColor(Color.GREEN) //colour GREEN
             validityImage.setImageResource(R.drawable.done)
             correctAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -365,7 +395,7 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             validityTxt.text = "Wrong"
-            validityTxt.setTextColor(Color.parseColor("#DF0000"))//red
+            validityTxt.setTextColor(Color.RED)//red
             validityImage.setImageResource(R.drawable.cross_mark_48)
             wrongAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
@@ -416,6 +446,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
 
 
 

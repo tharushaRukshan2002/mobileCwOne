@@ -67,7 +67,7 @@
         android:id="@+id/validityLinear"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:weightSum="5"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,7 +78,7 @@
             android:id="@+id/answerValidityTxt"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:fontFamily="casual"
             android:textAlignment="center"
             android:textSize="35sp"
@@ -90,7 +90,7 @@
             android:id="@+id/answerValidityImg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             tools:srcCompat="@tools:sample/avatars"
             android:contentDescription="@string/right_or_wrong" />
 
@@ -111,7 +111,7 @@
             android:id="@+id/answerValidityTxt1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:fontFamily="casual"
             android:textColor="@color/red"
             android:textAlignment="center"
@@ -124,7 +124,7 @@
             android:id="@+id/answerValidityImg1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
             tools:srcCompat="@tools:sample/avatars"
             android:contentDescription="@string/right_or_wrong" />
 
@@ -140,7 +140,7 @@
         android:weightSum="2"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="90dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/validityLinear">
