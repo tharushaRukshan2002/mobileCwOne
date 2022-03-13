@@ -19,5 +19,8 @@
 <!--    <string name="hello_first_fragment">Hello first fragment</string>-->
 <!--    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->
     <string name="seconds_left">seconds left:</string>
+    <string name="name_tharusha_ravindra">Name: Tharusha Ravindra</string>
+    <string name="w1830179">Std Id: w1830179</string>
+    <string name="no_hora_wada">I confirm that I understand what plagiarism is and have read and understood the section on Assessment Offences in the Essential Information for Students. The work that I have submitted is entirely my own. Any work from other authors is duly referenced and acknowledged.</string>
 
 </resources>

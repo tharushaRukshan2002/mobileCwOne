@@ -13,42 +13,42 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity : AppCompatActivity() {
-
+    //textViews
     private lateinit var textFieldOne: TextView //textField to set equation
     private lateinit var textFieldTwo: TextView //textField to set equation
     private lateinit var validityTxt: TextView //correct wrong text
     private lateinit var timerTxt: TextView //timer textview
     private lateinit var wrongTxt: TextView //wrong answers
 
-
+    //Buttons
     private lateinit var greaterBtn: Button // 1 > 2 btn
     private lateinit var equalsBtn: Button // 1 == 2
     private lateinit var lessBtn: Button // 1 < 2
+    private var buttons = mutableListOf<Button>()
 
+    //ImageViews
     private lateinit var validityImage: ImageView // image text
     private lateinit var wrongImage: ImageView //cross mark
 
+    //activity
     private var correctAnswers = 0 //num of correct answers
     private var wrongAnswers = 0 //num of wrong answers
-
-
     private var screenInitializeBool = true
-    private var timerRun = true
     private var sumOfOne = 0 // text view one sum
     private var sumOfTwo = 0 // text view two sum
     private var operators = mutableListOf("+", "-", "*", "/")
 
-    private var buttons = mutableListOf<Button>()
-    private var targetTimeToRun: Int = 30000 // starting time of the timer
-    private val correctList = mutableListOf<Int>()
+
+    private var targetTimeToRun: Int = 20000 // starting time of the timer 50S
+    private val correctList = mutableListOf<Int>() //to keep the correct iterations
 
     @SuppressLint("SetTextI18n")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        Log.i("my", "sumOne: $sumOfOne")
+        Log.i("my", "sumTwo: $sumOfTwo")
 
         textFieldOne = findViewById(R.id.equationOneTxt)
         textFieldTwo = findViewById(R.id.equationTwoTxt)
@@ -61,15 +61,31 @@ class MainActivity : AppCompatActivity() {
         wrongTxt = findViewById(R.id.answerValidityTxt1)
         wrongImage = findViewById(R.id.answerValidityImg1)
 
+        if (savedInstanceState != null) {
+            wrongAnswers = savedInstanceState.getInt("wrong")
+            correctAnswers = savedInstanceState.getInt("correct")
+            targetTimeToRun = savedInstanceState.getInt("timerTime")
+            textFieldOne.text = savedInstanceState.getString("textViewOne")
+            textFieldTwo.text = savedInstanceState.getString("textVieTwo")
+            screenInitializeBool = savedInstanceState.getBoolean("screenInitializeBool")
+            textFieldOne.text = savedInstanceState.getString("textViewOne")
+            textFieldTwo.text = savedInstanceState.getString("textVieTwo")
+            sumOfOne = savedInstanceState.getInt("sumOfOne")
+            sumOfTwo = savedInstanceState.getInt("sumOfTwo")
+            timer()
+        } else {
+            timerTxt.text ="Start on 5S"
+            Handler(Looper.getMainLooper()).postDelayed({
+                buttonEnableFun()
+                screenInitialize()
+                timer()
+            }, 5000)
+
+        }
 
         buttons.add(greaterBtn)
         buttons.add(equalsBtn)
         buttons.add(lessBtn)
-
-
-        screenInitialize()
-        timer()
-
 
         greaterBtn.setOnClickListener {
             greaterBtnFunction()
@@ -82,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         lessBtn.setOnClickListener {
             lessButtonFunction()
         }
-
 
     }
 
@@ -99,16 +114,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        sumOfOne = savedInstanceState.getInt("sumOfOne")
-        sumOfTwo = savedInstanceState.getInt("sumOfTwo")
-        wrongAnswers = savedInstanceState.getInt("wrong")
-        correctAnswers = savedInstanceState.getInt("correct")
-        targetTimeToRun = savedInstanceState.getInt("timerTime")
-        textFieldOne.text = savedInstanceState.getString("textViewOne")
-        textFieldTwo.text = savedInstanceState.getString("textVieTwo")
-        screenInitializeBool = savedInstanceState.getBoolean("screenInitializeBool")
+    /**
+     * This method will completely kill the activity otherwise the timer will run
+     * although you call the function.
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+        this.finish()
     }
 
     /**
@@ -118,12 +130,9 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun timer() {
-
         targetTimeToRun -= 1000
         val seconds = (targetTimeToRun / 1000)//calculating seconds remaining
-
         timerTxt.text = "seconds left: $seconds 's"
-
         //if number of correct answers is divisible by 5 the 10s will be added
         if (correctAnswers !in correctList && correctAnswers % 5 == 0 && correctAnswers / 5 != 0) {
             targetTimeToRun += 10000
@@ -134,24 +143,22 @@ class MainActivity : AppCompatActivity() {
         //this will call timer method recursively
         if (targetTimeToRun > 0) {
             Handler(Looper.getMainLooper()).postDelayed({
-
                 timer()
-
             }, 1000)
         }
         //this will end the game
         if (targetTimeToRun <= 0) {
             timeEnd()
         }
-
-
     }
 
+    /**
+     * This method will have all the actions this does when the timer stops
+     */
     @SuppressLint("SetTextI18n")
     private fun timeEnd() {
         screenInitializeBool = false
-        //correct Answer
-        validityTxt.text = "Correct: $correctAnswers"
+        validityTxt.text = "Correct: $correctAnswers"//correct Answer
         validityTxt.setTextColor(Color.GREEN)
         validityTxt.textSize = 33f
         validityImage.setImageResource(R.drawable.done)
@@ -167,7 +174,6 @@ class MainActivity : AppCompatActivity() {
      *this will do changes in the screen according to the timers time.
      */
     private fun screenControl() {
-
         if (targetTimeToRun < 10000) {
             timerTxt.setTextColor(Color.RED)
             timerTxt.textSize = 35f
@@ -221,14 +227,8 @@ class MainActivity : AppCompatActivity() {
                 operator = operators[operatorNum]
 
                 if (operator == "/") {
-                    /* if the operator is division "/" it will check the 'sum / random ' has no remainder
-                   and random num cannot be bigger than the sum . */
-                    if (sum != 1) {
-                        while (sum % randomNumber != 0) {
-                            randomNumber = (2..21).random()//number wont be 1
-                        }
-                    } else {
-                        randomNumber = 1
+                    while (sum % randomNumber != 0) {
+                        randomNumber = (1..21).random()
                     }
                 }
                 tempSum = calculation(sum, randomNumber, operator) //calculating the sum
@@ -387,11 +387,8 @@ class MainActivity : AppCompatActivity() {
             validityImage.setImageResource(R.drawable.done)
             correctAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
-
                 screenInitialize()
-
             }, 1000)
-
 
         } else {
             validityTxt.text = "Wrong"
@@ -399,9 +396,7 @@ class MainActivity : AppCompatActivity() {
             validityImage.setImageResource(R.drawable.cross_mark_48)
             wrongAnswers++
             Handler(Looper.getMainLooper()).postDelayed({
-
                 screenInitialize()
-
             }, 1000)
 
         }
@@ -409,7 +404,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     *method will set the text to the passed field from the
+     * @param textView TextView
+     * items will be taken  from the list that passed from the textFieldItemList
+     * @param textFieldItemsList mutableList
      */
     private fun setTextToField(textView: TextView, textFieldItemsList: List<String>) {
         var textViewLoop = 0
